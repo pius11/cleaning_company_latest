@@ -257,6 +257,10 @@ class CleanJobRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Filename, X-Session-Token, X-Access-Token")
         self.end_headers()
 
+    def do_HEAD(self):
+        """Menangani permintaan HEAD (seperti curl -I atau health-check)."""
+        self.do_GET()
+
     def do_GET(self):
         """Menangani permintaan GET (halaman web & API)."""
         parsed_url = urllib.parse.urlparse(self.path)
