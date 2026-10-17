@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CleanJob AI — Scraper Data Cleaner & Company Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg-main: #0B0F19;
@@ -14,19 +17,19 @@
       --bg-card-hover: rgba(26, 36, 56, 0.95);
       --border-subtle: rgba(255, 255, 255, 0.08);
       --border-active: rgba(99, 102, 241, 0.5);
-      
+
       --primary: #6366F1;
       --primary-hover: #4F46E5;
       --primary-glow: rgba(99, 102, 241, 0.25);
-      
+
       --emerald: #10B981;
       --emerald-hover: #059669;
       --emerald-glow: rgba(16, 185, 129, 0.25);
-      
+
       --text-main: #F3F4F6;
       --text-muted: #9CA3AF;
       --text-subtle: #6B7280;
-      
+
       --term-bg: #06090F;
       --term-border: #1E293B;
       --term-green: #34D399;
@@ -49,7 +52,7 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
-      background-image: 
+      background-image:
         radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
         radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
     }
@@ -69,7 +72,7 @@
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
-      background-image: 
+      background-image:
         radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
         radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
     }
@@ -88,8 +91,15 @@
     }
 
     @keyframes zoomIn {
-      from { opacity: 0; transform: scale(0.92); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.92);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .token-icon-wrap {
@@ -155,9 +165,21 @@
     }
 
     @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-8px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(8px);
+      }
     }
 
     .token-error-msg {
@@ -357,8 +379,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Card Wrapper */
@@ -403,13 +432,15 @@
       position: relative;
     }
 
-    .dropzone:hover, .dropzone.dragover {
+    .dropzone:hover,
+    .dropzone.dragover {
       border-color: var(--primary);
       background: rgba(99, 102, 241, 0.04);
       transform: translateY(-2px);
     }
 
-    .dropzone.clean-mode:hover, .dropzone.clean-mode.dragover {
+    .dropzone.clean-mode:hover,
+    .dropzone.clean-mode.dragover {
       border-color: var(--emerald);
       background: rgba(16, 185, 129, 0.04);
     }
@@ -620,9 +651,17 @@
       border-radius: 50%;
     }
 
-    .dot-red { background: #FF5F56; }
-    .dot-yellow { background: #FFBD2E; }
-    .dot-green { background: #27C93F; }
+    .dot-red {
+      background: #FF5F56;
+    }
+
+    .dot-yellow {
+      background: #FFBD2E;
+    }
+
+    .dot-green {
+      background: #27C93F;
+    }
 
     .terminal-title {
       font-family: 'JetBrains Mono', monospace;
@@ -646,6 +685,7 @@
     .terminal-body::-webkit-scrollbar {
       width: 6px;
     }
+
     .terminal-body::-webkit-scrollbar-thumb {
       background: #1E293B;
       border-radius: 3px;
@@ -655,11 +695,28 @@
       margin-bottom: 0.25rem;
       animation: fadeIn 0.15s ease;
     }
-    .log-timestamp { color: var(--text-subtle); }
-    .log-info { color: var(--term-cyan); }
-    .log-success { color: var(--term-green); font-weight: 600; }
-    .log-warn { color: var(--term-yellow); }
-    .log-error { color: var(--term-red); font-weight: 600; }
+
+    .log-timestamp {
+      color: var(--text-subtle);
+    }
+
+    .log-info {
+      color: var(--term-cyan);
+    }
+
+    .log-success {
+      color: var(--term-green);
+      font-weight: 600;
+    }
+
+    .log-warn {
+      color: var(--term-yellow);
+    }
+
+    .log-error {
+      color: var(--term-red);
+      font-weight: 600;
+    }
 
     /* Post-Cleaning Action Panel */
     .clean-result-panel {
@@ -704,8 +761,13 @@
       color: var(--text-main);
     }
 
-    .stat-val.fresh { color: var(--emerald); }
-    .stat-val.removed { color: var(--term-red); }
+    .stat-val.fresh {
+      color: var(--emerald);
+    }
+
+    .stat-val.removed {
+      color: var(--term-red);
+    }
 
     /* Modal Popup */
     .modal-overlay {
@@ -815,6 +877,7 @@
     .company-grid::-webkit-scrollbar {
       width: 6px;
     }
+
     .company-grid::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 3px;
@@ -877,6 +940,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- ============================================== -->
@@ -892,17 +956,8 @@
 
       <form onsubmit="handleTokenSubmit(event)">
         <div class="token-input-group">
-          <input 
-            type="text" 
-            id="token-input-field" 
-            class="token-input" 
-            placeholder="••••••" 
-            maxlength="6" 
-            autocomplete="off" 
-            autofocus 
-            required 
-            oninput="this.value = this.value.toUpperCase(); resetTokenError();"
-          >
+          <input type="text" id="token-input-field" class="token-input" placeholder="••••••" maxlength="6"
+            autocomplete="off" autofocus required oninput="this.value = this.value.toUpperCase(); resetTokenError();">
           <div class="token-error-msg" id="token-error-msg">Token salah! Akses ditolak.</div>
           <div class="token-hint-text">Sesi aktif otomatis berlaku selama 2 hari di perangkat ini.</div>
         </div>
@@ -930,7 +985,7 @@
               <span class="brand-badge">In-Memory Engine</span>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 2px;">
-              <span class="session-badge">🔒 Sesi Aktif: INT206 (2 Hari)</span>
+              <span class="session-badge">🔒 Sesi Aktif: (2 Hari)</span>
               <button class="logout-btn" onclick="executeLogout()">Keluar</button>
             </div>
           </div>
@@ -961,7 +1016,8 @@
           <div class="page-header">
             <h2 class="page-title">📥 Import Company ke Database JSON</h2>
             <p class="page-desc">
-              Unggah file CSV scraper riwayat lama Anda. Sistem akan mengambil kolom <code>employer_company_name</code>, membersihkan duplikat, dan menggabungkannya ke dalam <code>companies.json</code>.
+              Unggah file CSV scraper riwayat lama Anda. Sistem akan mengambil kolom <code>employer_company_name</code>,
+              membersihkan duplikat, dan menggabungkannya ke dalam <code>companies.json</code>.
             </p>
             <div class="privacy-tag">
               🛡️ Zero Disk Storage: File CSV yang diunggah tidak disimpan di server (murni diproses di RAM).
@@ -1006,7 +1062,8 @@
               <div class="terminal-title">terminal@cleanjob: ~/import</div>
             </div>
             <div class="terminal-body" id="import-terminal">
-              <div class="log-line"><span class="log-timestamp">[STANDBY]</span> Siap menerima file CSV untuk diimpor ke JSON...</div>
+              <div class="log-line"><span class="log-timestamp">[STANDBY]</span> Siap menerima file CSV untuk diimpor ke
+                JSON...</div>
             </div>
           </div>
         </div>
@@ -1021,7 +1078,8 @@
           <div class="page-header">
             <h2 class="page-title">✨ Cleaning Data Scraper Baru</h2>
             <p class="page-desc">
-              Unggah data scraping baru. Sistem akan menghapus baris yang perusahaannya sudah ada di <code>companies.json</code> serta membuang duplikasi di dalam file tersebut.
+              Unggah data scraping baru. Sistem akan menghapus baris yang perusahaannya sudah ada di
+              <code>companies.json</code> serta membuang duplikasi di dalam file tersebut.
             </p>
             <div class="privacy-tag">
               🛡️ Strictly Read-Only: Database JSON tidak akan diubah sama sekali, dan file tidak disimpan di server.
@@ -1066,7 +1124,8 @@
               <div class="terminal-title">terminal@cleanjob: ~/clean</div>
             </div>
             <div class="terminal-body" id="clean-terminal">
-              <div class="log-line"><span class="log-timestamp">[STANDBY]</span> Silakan drop file CSV baru yang ingin dibersihkan...</div>
+              <div class="log-line"><span class="log-timestamp">[STANDBY]</span> Silakan drop file CSV baru yang ingin
+                dibersihkan...</div>
             </div>
           </div>
 
@@ -1112,18 +1171,22 @@
       <!-- ============================================== -->
       <section id="page-db" class="page-section">
         <div class="glass-card">
-          <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+          <div class="page-header"
+            style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
             <div>
               <h2 class="page-title">🏢 Database Perusahaan Terdaftar</h2>
               <p class="page-desc">
-                Daftar seluruh nama perusahaan yang tersimpan di <code>companies.json</code> sebagai referensi eliminasi duplikat.
+                Daftar seluruh nama perusahaan yang tersimpan di <code>companies.json</code> sebagai referensi eliminasi
+                duplikat.
               </p>
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <span class="brand-badge" id="badge-total-companies" style="font-size: 0.85rem; padding: 0.35rem 0.85rem;">
+              <span class="brand-badge" id="badge-total-companies"
+                style="font-size: 0.85rem; padding: 0.35rem 0.85rem;">
                 0 Perusahaan
               </span>
-              <button class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.85rem;" onclick="loadCompanyDatabase()">
+              <button class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.85rem;"
+                onclick="loadCompanyDatabase()">
                 <span>🔄</span> Refresh
               </button>
             </div>
@@ -1131,7 +1194,8 @@
 
           <!-- Search Bar -->
           <div class="search-bar-wrap">
-            <input type="text" id="search-company-input" class="search-input" placeholder="🔍 Ketik nama perusahaan untuk mencari cepat..." oninput="filterCompanies()">
+            <input type="text" id="search-company-input" class="search-input"
+              placeholder="🔍 Ketik nama perusahaan untuk mencari cepat..." oninput="filterCompanies()">
           </div>
 
           <!-- Company Cards Grid -->
@@ -1164,7 +1228,8 @@
       </p>
       <div class="modal-btn-row">
         <button class="btn btn-secondary" onclick="closeImportModal()">Tutup</button>
-        <button class="btn btn-primary" onclick="closeImportModal(); switchTab('page-db');">Lihat Database Company</button>
+        <button class="btn btn-primary" onclick="closeImportModal(); switchTab('page-db');">Lihat Database
+          Company</button>
       </div>
     </div>
   </div>
@@ -1217,7 +1282,7 @@
             document.getElementById('badge-total-companies').textContent = `${data.total_companies} Perusahaan Terdaftar`;
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
 
     function showTokenGate() {
@@ -1268,7 +1333,7 @@
       if (!confirm('Apakah Anda yakin ingin keluar dari sesi ini?')) return;
       try {
         await fetch('/api/logout', { method: 'POST' });
-      } catch (e) {}
+      } catch (e) { }
       showTokenGate();
     }
 
@@ -1294,7 +1359,7 @@
     function switchTab(pageId) {
       document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      
+
       document.getElementById(pageId).classList.add('active');
 
       if (pageId === 'page-import') {
@@ -1648,4 +1713,5 @@
     });
   </script>
 </body>
+
 </html>
