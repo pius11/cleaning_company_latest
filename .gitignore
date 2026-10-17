@@ -12,6 +12,8 @@ __pycache__/
 example_file/
 output_clean/*
 !output_clean/.gitkeep
+.well-known
+server.log
 
 # ==========================================
 # Backup & Temporary Files
