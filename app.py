@@ -31,7 +31,7 @@ except OverflowError:
     csv.field_size_limit(2147483647)
 
 # Konfigurasi Server & Token Akses
-PORT = int(os.environ.get("PORT", 3399))
+PORT = int(os.environ.get("PORT", 4000))
 JSON_FILE = "companies.json"
 BACKUP_JSON_FILE = "companies.json.bak"
 MAX_PAYLOAD_SIZE = 30 * 1024 * 1024  # 30 Megabytes
