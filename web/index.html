@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CleanJob AI — Scraper Data Cleaner & Company Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0B0F19;
+      --bg-card: rgba(17, 24, 39, 0.85);
+      --bg-card-hover: rgba(26, 36, 56, 0.95);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(99, 102, 241, 0.5);
+      
+      --primary: #6366F1;
+      --primary-hover: #4F46E5;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      
+      --emerald: #10B981;
+      --emerald-hover: #059669;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      
+      --text-main: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --text-subtle: #6B7280;
+      
+      --term-bg: #06090F;
+      --term-border: #1E293B;
+      --term-green: #34D399;
+      --term-cyan: #38BDF8;
+      --term-yellow: #FBBF24;
+      --term-red: #F87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+    }
+
+    /* ============================================== */
+    /* TOKEN GATE SCREEN (TAMPILAN LOGIN TOKEN)        */
+    /* ============================================== */
+    .token-gate-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-main);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+    }
+
+    .token-gate-card {
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 2.75rem 2.25rem;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(99, 102, 241, 0.15);
+      backdrop-filter: blur(20px);
+      animation: zoomIn 0.35s ease;
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .token-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(16, 185, 129, 0.2));
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
+    }
+
+    .token-gate-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .token-gate-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.75rem;
+    }
+
+    .token-input-group {
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+
+    .token-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      text-align: center;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .token-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 25px var(--primary-glow);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .token-input.is-invalid {
+      border-color: var(--term-red);
+      box-shadow: 0 0 20px rgba(248, 113, 113, 0.3);
+      animation: shake 0.3s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .token-error-msg {
+      display: none;
+      color: var(--term-red);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .token-hint-text {
+      color: var(--text-subtle);
+      font-size: 0.78rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-token-submit {
+      width: 100%;
+      padding: 0.95rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--emerald));
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 18px var(--primary-glow);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-token-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+    }
+
+    /* ============================================== */
+    /* MAIN APPLICATION LAYOUT                         */
+    /* ============================================== */
+    #app-container {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header Nav */
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(11, 15, 25, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--emerald));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: white;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-size: 0.7rem;
+      background: rgba(99, 102, 241, 0.15);
+      color: #A5B4FC;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .session-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      background: rgba(16, 185, 129, 0.12);
+      color: #6EE7B7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #F87171;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    /* Tabs Navigation */
+    .tabs-nav {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.3rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      gap: 0.25rem;
+    }
+
+    .tab-btn {
+      padding: 0.55rem 1.1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.88rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .tab-btn.clean-tab.active {
+      background: var(--emerald);
+      box-shadow: 0 4px 12px var(--emerald-glow);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card Wrapper */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      margin-bottom: 2rem;
+    }
+
+    .page-header {
+      margin-bottom: 1.75rem;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .page-desc {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    /* Drag & Drop Zone */
+    .dropzone {
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .dropzone.clean-mode:hover, .dropzone.clean-mode.dragover {
+      border-color: var(--emerald);
+      background: rgba(16, 185, 129, 0.04);
+    }
+
+    .dropzone-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .dropzone:hover .dropzone-icon {
+      transform: scale(1.1);
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .dropzone.clean-mode:hover .dropzone-icon {
+      background: rgba(16, 185, 129, 0.15);
+    }
+
+    .dropzone-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .dropzone-hint {
+      color: var(--text-subtle);
+      font-size: 0.82rem;
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Selected File Preview */
+    .file-preview {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .file-preview.active {
+      display: flex;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .file-badge-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #A5B4FC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .file-preview.clean-file .file-badge-icon {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6EE7B7;
+    }
+
+    .file-details h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      max-width: 450px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-details p {
+      font-size: 0.8rem;
+      color: var(--text-subtle);
+    }
+
+    .remove-file-btn {
+      background: rgba(239, 68, 68, 0.1);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .remove-file-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    /* Action Buttons */
+    .action-group {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.75rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, var(--emerald), var(--emerald-hover));
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--emerald-glow);
+    }
+
+    .btn-emerald:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-2px);
+    }
+
+    /* Terminal Console Box */
+    .terminal-container {
+      margin-top: 1.75rem;
+      background: var(--term-bg);
+      border: 1px solid var(--term-border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .terminal-header {
+      background: #0D131F;
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--term-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #FF5F56; }
+    .dot-yellow { background: #FFBD2E; }
+    .dot-green { background: #27C93F; }
+
+    .terminal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-subtle);
+      font-weight: 500;
+    }
+
+    .terminal-body {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      padding: 1.25rem;
+      max-height: 250px;
+      overflow-y: auto;
+      color: #E2E8F0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .terminal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+    .terminal-body::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 3px;
+    }
+
+    .log-line {
+      margin-bottom: 0.25rem;
+      animation: fadeIn 0.15s ease;
+    }
+    .log-timestamp { color: var(--text-subtle); }
+    .log-info { color: var(--term-cyan); }
+    .log-success { color: var(--term-green); font-weight: 600; }
+    .log-warn { color: var(--term-yellow); }
+    .log-error { color: var(--term-red); font-weight: 600; }
+
+    /* Post-Cleaning Action Panel */
+    .clean-result-panel {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 14px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .clean-result-panel.active {
+      display: block;
+    }
+
+    .result-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .stat-box {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-val {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .stat-val.fresh { color: var(--emerald); }
+    .stat-val.removed { color: var(--term-red); }
+
+    /* Modal Popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: #111827;
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 480px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      transform: scale(0.95);
+      transition: all 0.25s ease;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: scale(1);
+    }
+
+    .modal-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .modal-btn-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    /* Page 3: Company Database */
+    .search-bar-wrap {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.04);
+    }
+
+    .company-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.85rem;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .company-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    .company-grid::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .company-badge {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .company-badge:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .company-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .company-idx {
+      font-size: 0.7rem;
+      color: var(--text-subtle);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Privacy Banner */
+    .privacy-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(16, 185, 129, 0.1);
+      color: #6EE7B7;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 1.25rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-subtle);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================== -->
+  <!-- 1. TOKEN GATE MODAL / SCREEN                   -->
+  <!-- ============================================== -->
+  <div class="token-gate-wrapper" id="token-gate-screen">
+    <div class="token-gate-card">
+      <div class="token-icon-wrap">🔐</div>
+      <h2 class="token-gate-title">CleanJob AI</h2>
+      <p class="token-gate-desc">
+        Aplikasi ini dilindungi. Masukkan <strong>6 digit token otorisasi</strong> resmi untuk membuka akses.
+      </p>
+
+      <form onsubmit="handleTokenSubmit(event)">
+        <div class="token-input-group">
+          <input 
+            type="text" 
+            id="token-input-field" 
+            class="token-input" 
+            placeholder="••••••" 
+            maxlength="6" 
+            autocomplete="off" 
+            autofocus 
+            required 
+            oninput="this.value = this.value.toUpperCase(); resetTokenError();"
+          >
+          <div class="token-error-msg" id="token-error-msg">Token salah! Akses ditolak.</div>
+          <div class="token-hint-text">Sesi aktif otomatis berlaku selama 2 hari di perangkat ini.</div>
+        </div>
+
+        <button type="submit" class="btn-token-submit" id="btn-token-submit">
+          <span>Buka Akses</span> <span>🚀</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- 2. MAIN APPLICATION CONTENT (TERKUNCI AWALNYA)  -->
+  <!-- ============================================== -->
+  <div id="app-container">
+
+    <!-- Header & Navigation -->
+    <header>
+      <div class="nav-container">
+        <a href="#" class="brand">
+          <div class="brand-icon">CJ</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="brand-title">CleanJob AI</span>
+              <span class="brand-badge">In-Memory Engine</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 2px;">
+              <span class="session-badge">🔒 Sesi Aktif: INT206 (2 Hari)</span>
+              <button class="logout-btn" onclick="executeLogout()">Keluar</button>
+            </div>
+          </div>
+        </a>
+
+        <div class="tabs-nav">
+          <button class="tab-btn active" id="tab-btn-1" onclick="switchTab('page-import')">
+            <span>📥</span> 1. Import to JSON
+          </button>
+          <button class="tab-btn clean-tab" id="tab-btn-2" onclick="switchTab('page-clean')">
+            <span>✨</span> 2. Cleaning Scraper
+          </button>
+          <button class="tab-btn" id="tab-btn-3" onclick="switchTab('page-db')">
+            <span>🏢</span> 3. Company DB
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+
+      <!-- ============================================== -->
+      <!-- PAGE 1: IMPORT FILE TO JSON                    -->
+      <!-- ============================================== -->
+      <section id="page-import" class="page-section active">
+        <div class="glass-card">
+          <div class="page-header">
+            <h2 class="page-title">📥 Import Company ke Database JSON</h2>
+            <p class="page-desc">
+              Unggah file CSV scraper riwayat lama Anda. Sistem akan mengambil kolom <code>employer_company_name</code>, membersihkan duplikat, dan menggabungkannya ke dalam <code>companies.json</code>.
+            </p>
+            <div class="privacy-tag">
+              🛡️ Zero Disk Storage: File CSV yang diunggah tidak disimpan di server (murni diproses di RAM).
+            </div>
+          </div>
+
+          <!-- Dropzone Import -->
+          <div class="dropzone" id="import-dropzone">
+            <input type="file" id="import-file-input" accept=".csv">
+            <div class="dropzone-icon">📁</div>
+            <div class="dropzone-text">Tarik & Lepas File CSV di sini</div>
+            <div class="dropzone-hint">atau klik untuk memilih file dari komputer Anda (Maksimal 30 MB)</div>
+          </div>
+
+          <!-- File Preview -->
+          <div class="file-preview" id="import-preview">
+            <div class="file-info">
+              <div class="file-badge-icon">CSV</div>
+              <div class="file-details">
+                <h4 id="import-filename">filename.csv</h4>
+                <p id="import-filesize">0 KB</p>
+              </div>
+            </div>
+            <button class="remove-file-btn" onclick="clearImportFile()">Ganti / Hapus File</button>
+          </div>
+
+          <!-- Action Button -->
+          <div class="action-group">
+            <button class="btn btn-primary" id="btn-do-import" onclick="executeImport()" disabled>
+              <span>⚡</span> Mulai Import Company
+            </button>
+          </div>
+
+          <!-- Terminal Console -->
+          <div class="terminal-container">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+              </div>
+              <div class="terminal-title">terminal@cleanjob: ~/import</div>
+            </div>
+            <div class="terminal-body" id="import-terminal">
+              <div class="log-line"><span class="log-timestamp">[STANDBY]</span> Siap menerima file CSV untuk diimpor ke JSON...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============================================== -->
+      <!-- PAGE 2: CLEANING SCRAPER                       -->
+      <!-- ============================================== -->
+      <section id="page-clean" class="page-section">
+        <div class="glass-card">
+          <div class="page-header">
+            <h2 class="page-title">✨ Cleaning Data Scraper Baru</h2>
+            <p class="page-desc">
+              Unggah data scraping baru. Sistem akan menghapus baris yang perusahaannya sudah ada di <code>companies.json</code> serta membuang duplikasi di dalam file tersebut.
+            </p>
+            <div class="privacy-tag">
+              🛡️ Strictly Read-Only: Database JSON tidak akan diubah sama sekali, dan file tidak disimpan di server.
+            </div>
+          </div>
+
+          <!-- Dropzone Clean -->
+          <div class="dropzone clean-mode" id="clean-dropzone">
+            <input type="file" id="clean-file-input" accept=".csv">
+            <div class="dropzone-icon">🧹</div>
+            <div class="dropzone-text">Tarik & Lepas File CSV Baru untuk Dibersihkan</div>
+            <div class="dropzone-hint">atau klik untuk memilih file scraper (Maksimal 30 MB)</div>
+          </div>
+
+          <!-- File Preview -->
+          <div class="file-preview clean-file" id="clean-preview">
+            <div class="file-info">
+              <div class="file-badge-icon">CSV</div>
+              <div class="file-details">
+                <h4 id="clean-filename">filename.csv</h4>
+                <p id="clean-filesize">0 KB</p>
+              </div>
+            </div>
+            <button class="remove-file-btn" onclick="clearCleanFile()">Ganti / Hapus File</button>
+          </div>
+
+          <!-- Action Button -->
+          <div class="action-group" id="clean-action-initial">
+            <button class="btn btn-emerald" id="btn-do-clean" onclick="executeClean()" disabled>
+              <span>🚀</span> Clean Now
+            </button>
+          </div>
+
+          <!-- Terminal Console -->
+          <div class="terminal-container">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+              </div>
+              <div class="terminal-title">terminal@cleanjob: ~/clean</div>
+            </div>
+            <div class="terminal-body" id="clean-terminal">
+              <div class="log-line"><span class="log-timestamp">[STANDBY]</span> Silakan drop file CSV baru yang ingin dibersihkan...</div>
+            </div>
+          </div>
+
+          <!-- Hasil Cleaning & 2 Tombol Aksi Pasca-Cleaning -->
+          <div class="clean-result-panel" id="clean-result-panel">
+            <div class="result-stats-grid">
+              <div class="stat-box">
+                <div class="stat-label">Total Baris Awal</div>
+                <div class="stat-val" id="stat-total-rows">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Dihapus (Sudah di JSON)</div>
+                <div class="stat-val removed" id="stat-removed-json">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Dihapus (Duplikat Internal)</div>
+                <div class="stat-val removed" id="stat-removed-internal">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Sisa Baris Bersih</div>
+                <div class="stat-val fresh" id="stat-kept-rows">0</div>
+              </div>
+            </div>
+
+            <div class="action-group" style="margin-top: 0;">
+              <!-- Tombol 1: Download Clean File -->
+              <button class="btn btn-emerald" id="btn-download-clean" onclick="downloadCleanFile()">
+                <span>📥</span> Download Clean File
+              </button>
+              <!-- Tombol 2: Clean Another File -->
+              <button class="btn btn-secondary" onclick="cleanAnotherFile()">
+                <span>🔄</span> Clean Another File
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ============================================== -->
+      <!-- PAGE 3: COMPANY DATABASE                       -->
+      <!-- ============================================== -->
+      <section id="page-db" class="page-section">
+        <div class="glass-card">
+          <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 class="page-title">🏢 Database Perusahaan Terdaftar</h2>
+              <p class="page-desc">
+                Daftar seluruh nama perusahaan yang tersimpan di <code>companies.json</code> sebagai referensi eliminasi duplikat.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span class="brand-badge" id="badge-total-companies" style="font-size: 0.85rem; padding: 0.35rem 0.85rem;">
+                0 Perusahaan
+              </span>
+              <button class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.85rem;" onclick="loadCompanyDatabase()">
+                <span>🔄</span> Refresh
+              </button>
+            </div>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="search-bar-wrap">
+            <input type="text" id="search-company-input" class="search-input" placeholder="🔍 Ketik nama perusahaan untuk mencari cepat..." oninput="filterCompanies()">
+          </div>
+
+          <!-- Company Cards Grid -->
+          <div class="company-grid" id="company-grid-container">
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-subtle); padding: 2rem;">
+              Memuat daftar perusahaan...
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      CleanJob AI &bull; Protected Access (INT206) &bull; Ultra-Lightweight In-Memory Engine &bull; Zero Server Storage
+    </footer>
+
+  </div>
+
+  <!-- ============================================== -->
+  <!-- POPUP MODAL: IMPORT SELESAI                    -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="import-modal">
+    <div class="modal-box">
+      <div class="modal-icon-wrap">🎉</div>
+      <h3 class="modal-title">Import Selesai!</h3>
+      <p class="modal-desc" id="import-modal-desc">
+        Berhasil memproses file dan memperbarui database JSON secara aman.
+      </p>
+      <div class="modal-btn-row">
+        <button class="btn btn-secondary" onclick="closeImportModal()">Tutup</button>
+        <button class="btn btn-primary" onclick="closeImportModal(); switchTab('page-db');">Lihat Database Company</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-Side JavaScript Logic -->
+  <script>
+    // State Aplikasi di Memori Browser (Client-Side)
+    let selectedImportFile = null;
+    let selectedCleanFile = null;
+    let currentCleanBlob = null;
+    let currentCleanFilename = "cleaned_data.csv";
+    let allCompaniesList = [];
+
+    // ==========================================
+    // AUTHENTICATION & TOKEN GATE LOGIC
+    // ==========================================
+    const tokenGateScreen = document.getElementById('token-gate-screen');
+    const appContainer = document.getElementById('app-container');
+    const tokenInputField = document.getElementById('token-input-field');
+    const tokenErrorMsg = document.getElementById('token-error-msg');
+    const btnTokenSubmit = document.getElementById('btn-token-submit');
+
+    function resetTokenError() {
+      tokenInputField.classList.remove('is-invalid');
+      tokenErrorMsg.style.display = 'none';
+    }
+
+    async function checkAuthStatus() {
+      try {
+        const res = await fetch('/api/check-auth');
+        const data = await res.json();
+        if (data.authenticated) {
+          showApp();
+        } else {
+          showTokenGate();
+        }
+      } catch (e) {
+        showTokenGate();
+      }
+    }
+
+    function showApp() {
+      tokenGateScreen.style.display = 'none';
+      appContainer.style.display = 'flex';
+      // Load initial company count
+      fetch('/api/status')
+        .then(res => res.json())
+        .then(data => {
+          if (data.total_companies !== undefined) {
+            document.getElementById('badge-total-companies').textContent = `${data.total_companies} Perusahaan Terdaftar`;
+          }
+        })
+        .catch(() => {});
+    }
+
+    function showTokenGate() {
+      tokenGateScreen.style.display = 'flex';
+      appContainer.style.display = 'none';
+      tokenInputField.value = '';
+      tokenInputField.focus();
+    }
+
+    async function handleTokenSubmit(e) {
+      e.preventDefault();
+      const token = tokenInputField.value.trim().toUpperCase();
+      if (!token) return;
+
+      btnTokenSubmit.disabled = true;
+      btnTokenSubmit.innerHTML = `<span>Memeriksa...</span> <span>⏳</span>`;
+      resetTokenError();
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: jsonStringifySafe({ token: token })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.status === 'success') {
+          showApp();
+        } else {
+          tokenInputField.classList.add('is-invalid');
+          tokenErrorMsg.style.display = 'block';
+          tokenErrorMsg.textContent = data.message || 'Token akses salah! Silakan coba lagi.';
+          tokenInputField.focus();
+          tokenInputField.select();
+        }
+      } catch (err) {
+        tokenInputField.classList.add('is-invalid');
+        tokenErrorMsg.style.display = 'block';
+        tokenErrorMsg.textContent = 'Gagal menghubungi server.';
+      } finally {
+        btnTokenSubmit.disabled = false;
+        btnTokenSubmit.innerHTML = `<span>Buka Akses</span> <span>🚀</span>`;
+      }
+    }
+
+    async function executeLogout() {
+      if (!confirm('Apakah Anda yakin ingin keluar dari sesi ini?')) return;
+      try {
+        await fetch('/api/logout', { method: 'POST' });
+      } catch (e) {}
+      showTokenGate();
+    }
+
+    function jsonStringifySafe(obj) {
+      return JSON.stringify(obj);
+    }
+
+    // ==========================================
+    // UTILITIES
+    // ==========================================
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(2) + ' MB';
+    }
+
+    function getNowTime() {
+      const d = new Date();
+      return d.toTimeString().split(' ')[0];
+    }
+
+    // Tab Switching
+    function switchTab(pageId) {
+      document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(pageId).classList.add('active');
+
+      if (pageId === 'page-import') {
+        document.getElementById('tab-btn-1').classList.add('active');
+      } else if (pageId === 'page-clean') {
+        document.getElementById('tab-btn-2').classList.add('active');
+      } else if (pageId === 'page-db') {
+        document.getElementById('tab-btn-3').classList.add('active');
+        loadCompanyDatabase();
+      }
+    }
+
+    // ==========================================
+    // PAGE 1: IMPORT TO JSON LOGIC
+    // ==========================================
+    const importDropzone = document.getElementById('import-dropzone');
+    const importFileInput = document.getElementById('import-file-input');
+    const importPreview = document.getElementById('import-preview');
+    const btnDoImport = document.getElementById('btn-do-import');
+    const importTerminal = document.getElementById('import-terminal');
+
+    ['dragenter', 'dragover'].forEach(name => {
+      importDropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        importDropzone.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+      importDropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        importDropzone.classList.remove('dragover');
+      });
+    });
+
+    importDropzone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        setImportFile(files[0]);
+      }
+    });
+
+    importFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        setImportFile(e.target.files[0]);
+      }
+    });
+
+    function setImportFile(file) {
+      if (!file.name.toLowerCase().endsWith('.csv')) {
+        alert('Mohon pilih file dengan format .CSV');
+        return;
+      }
+      selectedImportFile = file;
+      document.getElementById('import-filename').textContent = file.name;
+      document.getElementById('import-filesize').textContent = formatBytes(file.size);
+      importDropzone.style.display = 'none';
+      importPreview.classList.add('active');
+      btnDoImport.disabled = false;
+      addImportLog(`[${getNowTime()}] File dipilih: ${file.name} (${formatBytes(file.size)})`);
+    }
+
+    function clearImportFile() {
+      selectedImportFile = null;
+      importFileInput.value = '';
+      importPreview.classList.remove('active');
+      importDropzone.style.display = 'block';
+      btnDoImport.disabled = true;
+    }
+
+    function addImportLog(text, type = '') {
+      const line = document.createElement('div');
+      line.className = 'log-line ' + (type ? 'log-' + type : '');
+      line.textContent = text;
+      importTerminal.appendChild(line);
+      importTerminal.scrollTop = importTerminal.scrollHeight;
+    }
+
+    async function executeImport() {
+      if (!selectedImportFile) return;
+
+      btnDoImport.disabled = true;
+      btnDoImport.innerHTML = `<span>⏳</span> Memproses Import...`;
+      addImportLog(`[${getNowTime()}] Mengirim file ${selectedImportFile.name} ke server in-memory engine...`, 'info');
+
+      try {
+        const url = `/api/import?filename=${encodeURIComponent(selectedImportFile.name)}`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/csv',
+            'X-Filename': encodeURIComponent(selectedImportFile.name)
+          },
+          body: selectedImportFile
+        });
+
+        if (res.status === 401) {
+          alert('Sesi token Anda telah habis (2 hari). Silakan masukkan kembali token INT206.');
+          showTokenGate();
+          return;
+        }
+
+        const data = await res.json();
+
+        if (res.ok && data.status === 'success') {
+          if (data.logs && Array.isArray(data.logs)) {
+            data.logs.forEach(msg => addImportLog(msg));
+          }
+          addImportLog(`[${getNowTime()}] [FINISH] Proses import selesai dengan sukses!`, 'success');
+
+          document.getElementById('import-modal-desc').innerHTML = `
+            <strong>File:</strong> ${data.filename}<br>
+            <strong>Total Baris Dipindai:</strong> ${data.total_rows} baris<br>
+            <strong>Perusahaan Baru Ditambahkan:</strong> <span style="color: #34D399; font-weight: 700;">+${data.new_companies_added}</span><br>
+            <strong>Total Database Saat Ini:</strong> ${data.final_count} perusahaan unik.
+          `;
+          document.getElementById('import-modal').classList.add('active');
+
+        } else {
+          addImportLog(`[${getNowTime()}] [ERROR] ${data.message || 'Terjadi kesalahan saat import.'}`, 'error');
+          alert('Gagal Import: ' + (data.message || 'Format CSV tidak sesuai.'));
+        }
+      } catch (err) {
+        addImportLog(`[${getNowTime()}] [FATAL] Gagal menghubungi server: ${err}`, 'error');
+        alert('Koneksi ke server gagal.');
+      } finally {
+        btnDoImport.disabled = false;
+        btnDoImport.innerHTML = `<span>⚡</span> Mulai Import Company`;
+      }
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.remove('active');
+    }
+
+
+    // ==========================================
+    // PAGE 2: CLEANING SCRAPER LOGIC
+    // ==========================================
+    const cleanDropzone = document.getElementById('clean-dropzone');
+    const cleanFileInput = document.getElementById('clean-file-input');
+    const cleanPreview = document.getElementById('clean-preview');
+    const btnDoClean = document.getElementById('btn-do-clean');
+    const cleanTerminal = document.getElementById('clean-terminal');
+    const cleanResultPanel = document.getElementById('clean-result-panel');
+    const cleanActionInitial = document.getElementById('clean-action-initial');
+
+    ['dragenter', 'dragover'].forEach(name => {
+      cleanDropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        cleanDropzone.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+      cleanDropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        cleanDropzone.classList.remove('dragover');
+      });
+    });
+
+    cleanDropzone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        setCleanFile(files[0]);
+      }
+    });
+
+    cleanFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        setCleanFile(e.target.files[0]);
+      }
+    });
+
+    function setCleanFile(file) {
+      if (!file.name.toLowerCase().endsWith('.csv')) {
+        alert('Mohon pilih file dengan format .CSV');
+        return;
+      }
+      selectedCleanFile = file;
+      document.getElementById('clean-filename').textContent = file.name;
+      document.getElementById('clean-filesize').textContent = formatBytes(file.size);
+      cleanDropzone.style.display = 'none';
+      cleanPreview.classList.add('active');
+      btnDoClean.disabled = false;
+      cleanResultPanel.classList.remove('active');
+      cleanActionInitial.style.display = 'flex';
+      addCleanLog(`[${getNowTime()}] File dipilih untuk dicleaning: ${file.name} (${formatBytes(file.size)})`);
+    }
+
+    function clearCleanFile() {
+      selectedCleanFile = null;
+      currentCleanBlob = null;
+      cleanFileInput.value = '';
+      cleanPreview.classList.remove('active');
+      cleanDropzone.style.display = 'block';
+      btnDoClean.disabled = true;
+      cleanResultPanel.classList.remove('active');
+      cleanActionInitial.style.display = 'flex';
+    }
+
+    function addCleanLog(text, type = '') {
+      const line = document.createElement('div');
+      line.className = 'log-line ' + (type ? 'log-' + type : '');
+      line.textContent = text;
+      cleanTerminal.appendChild(line);
+      cleanTerminal.scrollTop = cleanTerminal.scrollHeight;
+    }
+
+    async function executeClean() {
+      if (!selectedCleanFile) return;
+
+      btnDoClean.disabled = true;
+      btnDoClean.innerHTML = `<span>⏳</span> Sedang Membersihkan Data...`;
+      addCleanLog(`[${getNowTime()}] Memulai pembersihan data secara in-memory...`, 'info');
+
+      try {
+        const url = `/api/clean?filename=${encodeURIComponent(selectedCleanFile.name)}`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/csv',
+            'X-Filename': encodeURIComponent(selectedCleanFile.name)
+          },
+          body: selectedCleanFile
+        });
+
+        if (res.status === 401) {
+          alert('Sesi token Anda telah habis (2 hari). Silakan masukkan kembali token INT206.');
+          showTokenGate();
+          return;
+        }
+
+        const data = await res.json();
+
+        if (res.ok && data.status === 'success') {
+          if (data.logs && Array.isArray(data.logs)) {
+            data.logs.forEach(msg => addCleanLog(msg));
+          }
+          addCleanLog(`[${getNowTime()}] [FINISH] Cleaning selesai! Klik tombol download untuk mengambil file bersih.`, 'success');
+
+          // Simpan blob CSV langsung di memori browser (Client-Side Storage)
+          currentCleanBlob = new Blob([data.csv_data], { type: 'text/csv;charset=utf-8;' });
+          currentCleanFilename = data.filename || `cleaned_${selectedCleanFile.name}`;
+
+          document.getElementById('stat-total-rows').textContent = data.total_rows;
+          document.getElementById('stat-removed-json').textContent = data.removed_in_json;
+          document.getElementById('stat-removed-internal').textContent = data.removed_internal_dup;
+          document.getElementById('stat-kept-rows').textContent = data.kept_rows;
+
+          cleanResultPanel.classList.add('active');
+          cleanActionInitial.style.display = 'none';
+
+        } else {
+          addCleanLog(`[${getNowTime()}] [ERROR] ${data.message || 'Gagal membersihkan data.'}`, 'error');
+          alert('Gagal Cleaning: ' + (data.message || 'File tidak dapat diproses.'));
+        }
+      } catch (err) {
+        addCleanLog(`[${getNowTime()}] [FATAL] Gagal menghubungi server: ${err}`, 'error');
+        alert('Koneksi ke server gagal.');
+      } finally {
+        btnDoClean.disabled = false;
+        btnDoClean.innerHTML = `<span>🚀</span> Clean Now`;
+      }
+    }
+
+    function downloadCleanFile() {
+      if (!currentCleanBlob) {
+        alert('File bersih tidak ditemukan di memori.');
+        return;
+      }
+      const url = URL.createObjectURL(currentCleanBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = currentCleanFilename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      addCleanLog(`[${getNowTime()}] File '${currentCleanFilename}' berhasil diunduh ke komputer Anda.`, 'success');
+    }
+
+    function cleanAnotherFile() {
+      clearCleanFile();
+      addCleanLog(`------------------------------------------------------------`);
+      addCleanLog(`[${getNowTime()}] Halaman siap untuk membersihkan file scraper berikutnya...`);
+      cleanDropzone.scrollIntoView({ behavior: 'smooth' });
+    }
+
+
+    // ==========================================
+    // PAGE 3: COMPANY DATABASE LOGIC
+    // ==========================================
+    async function loadCompanyDatabase() {
+      const container = document.getElementById('company-grid-container');
+      const badge = document.getElementById('badge-total-companies');
+      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-subtle); padding: 2rem;">Memuat daftar perusahaan...</div>`;
+
+      try {
+        const res = await fetch('/api/companies');
+        if (res.status === 401) {
+          showTokenGate();
+          return;
+        }
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          allCompaniesList = data.companies || [];
+          badge.textContent = `${allCompaniesList.length} Perusahaan Terdaftar`;
+          renderCompanyList(allCompaniesList);
+        } else {
+          container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--term-red); padding: 2rem;">Gagal memuat database company.</div>`;
+        }
+      } catch (err) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--term-red); padding: 2rem;">Gagal menghubungi server: ${err}</div>`;
+      }
+    }
+
+    function renderCompanyList(companies) {
+      const container = document.getElementById('company-grid-container');
+      if (!companies || companies.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-subtle); padding: 2rem;">Belum ada perusahaan terdaftar atau tidak ada hasil yang cocok.</div>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      companies.forEach((comp, idx) => {
+        const badge = document.createElement('div');
+        badge.className = 'company-badge';
+        badge.innerHTML = `
+          <div class="company-name" title="${comp}">${comp}</div>
+          <div class="company-idx">#${idx + 1}</div>
+        `;
+        container.appendChild(badge);
+      });
+    }
+
+    function filterCompanies() {
+      const query = document.getElementById('search-company-input').value.toLowerCase().trim();
+      if (!query) {
+        renderCompanyList(allCompaniesList);
+        return;
+      }
+      const filtered = allCompaniesList.filter(c => c.toLowerCase().includes(query));
+      renderCompanyList(filtered);
+    }
+
+    // Inisialisasi: Periksa status token akses saat halaman dibuka
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuthStatus();
+    });
+  </script>
+</body>
+</html>
